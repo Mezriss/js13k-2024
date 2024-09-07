@@ -40,7 +40,7 @@ export default class W2 {
         this.gl.activeTexture(33984 /* TEXTURE0 */);
 
         // Hide polygons back-faces (optional)
-        this.gl.enable(2884 /* CULL_FACE */);
+        // this.gl.enable(2884 /* CULL_FACE */);
 
         this.#prepageBaseShader();
         
