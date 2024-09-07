@@ -11,6 +11,7 @@ out vec4 c;
 void main() {
 
     c = mix(texture(sampler, v_uv.xy), v_col, o[3]);
+    //c.rgb += dFdx(c.rgb)*vec3(3,0,-3);
 
     if(o[1] > 0.){
         // output = vec4(base color's RGB * (directional light + ambient light)), base color's Alpha) 
@@ -21,5 +22,4 @@ void main() {
         c = vec4(c.rgb * (max(dot(light, -normalize(cross(dFdx(v_pos.xyz), dFdy(v_pos.xyz)))), 0.0) + o[2]), c.a);
         }
     }
-    //c.rgb += dFdx(c.rgb)*vec3(3,0,-3);
 }
