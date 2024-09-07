@@ -1,9 +1,7 @@
 // WebGL framework
 // ===============
-import baseVertex from '../shaders/baseVertex.glsl'
-import baseFragment from '../shaders/baseFragment.glsl'
-import outlineVertex from '../shaders/outline.vert'
-import outlineFragment from '../shaders/outline.frag'
+import baseVertex from '../shaders/base.vert'
+import baseFragment from '../shaders/base.frag'
 
 export default class W2 {
     debug = false;
@@ -32,9 +30,6 @@ export default class W2 {
         this.gl.enable(2884 /* CULL_FACE */);
 
         this.#prepageBaseShader();
-        this.#prepageOutlineShader();
-        // Create a Vertex shader
-        // (this GLSL program is called for every vertex of the scene)
         
         this.gl.useProgram(this.program);
         if (this.debug) console.log('program:', this.gl.getProgramInfoLog(this.program) || 'OK');
@@ -47,8 +42,8 @@ export default class W2 {
         this.gl.enable(2929 /* DEPTH_TEST */);
 
         // When everything is loaded: set default light / camera
-        this.light({ y: -1 });
-        this.camera({ fov: 30 });
+        this.light(options.light || { y: -1 });
+        this.camera(options.camera || { fov: 30 });
     }
 
     #createShader(type, source) {
@@ -65,22 +60,6 @@ export default class W2 {
         this.gl.attachShader(this.program, this.#createShader(35632 /* FRAGMENT_SHADER */, baseFragment));
         this.gl.linkProgram(this.program);
     }
-
-    #prepageOutlineShader() {
-        this.outlineProgram = this.gl.createProgram();
-        this.gl.attachShader(this.outlineProgram, this.#createShader(35633 /* VERTEX_SHADER */, outlineVertex));
-        this.gl.attachShader(this.outlineProgram, this.#createShader(35632 /* FRAGMENT_SHADER */, outlineFragment));
-        this.gl.linkProgram(this.outlineProgram);
-
-        this.outlineProgram.vertexPositionAttribute = this.gl.getAttribLocation(this.outlineProgram, 'aVertexPosition');
-        this.outlineProgram.vertexNormalAttribute = this.gl.getAttribLocation(this.outlineProgram, 'aVertexNormal');
-        this.outlineProgram.pMatrixUniform = this.gl.getUniformLocation(this.outlineProgram, 'uPMatrix');
-        this.outlineProgram.vMatrixUniform = this.gl.getUniformLocation(this.outlineProgram, 'uVMatrix');
-        this.outlineProgram.mMatrixUniform = this.gl.getUniformLocation(this.outlineProgram, 'uMMatrix');
-        this.outlineProgram.offsetUniform = this.gl.getUniformLocation(this.outlineProgram, 'uOffset');
-        this.outlineProgram.outLineColor = this.gl.getUniformLocation(this.outlineProgram, 'uOutLineColor');
-    }
-
 
     // Set a state to an object
     setState(state, type, texture) {

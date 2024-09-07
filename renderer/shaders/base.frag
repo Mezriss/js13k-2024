@@ -1,4 +1,6 @@
 #version 300 es
+#pragma vscode_glsllint_stage: frag
+
 precision highp float;
 in vec4 v_pos, v_col, v_uv, v_normal;
 uniform vec3 light;
@@ -19,4 +21,5 @@ void main() {
         c = vec4(c.rgb * (max(dot(light, -normalize(cross(dFdx(v_pos.xyz), dFdy(v_pos.xyz)))), 0.0) + o[2]), c.a);
         }
     }
+    //c.rgb += dFdx(c.rgb)*vec3(3,0,-3);
 }

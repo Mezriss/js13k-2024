@@ -8,13 +8,12 @@ canvas.height = window.innerHeight;
 const w = new W.Renderer({
     canvas: canvas,
     clearColor: "#1E3A5F",
-    debug: true
+    debug: true,
+    light: { x: 0.2, y: 0, z: -1 },
+    camera: { z: 1, y: -5, rx: 80, fov: 30 }
 });
 
 w.ambient(0.3);
-w.light({ x: 0.2, y: 0, z: -1 });
-
-w.camera({ z: 1, y: -3, rx: 80 })
 
 w.group({ id: 'test' });
 
@@ -24,9 +23,9 @@ w.add('plane', W.Plane);
 w.add('cube', W.Cube);
 w.add('pyramid', W.Pyramid);
 
-w.sphere({ x: 0, y: 1, z: 0, b: "#00ff00", s: 0, h: 2 });
+w.sphere({ x: 0, y: 0, z: 0, b: "#00ff00" });
 
-w.pyramid({ y: 5, rx: 90, x: 1, b: "#ff000050", g: 'test', w: 2, h: 3, d: 2, id: 'pyramid1' });
+w.pyramid({ y: 0, rx: 90, x: 1, b: "#ff00ff", g: 'test', w: 2, h: 3, d: 2, id: 'pyramid1' });
 w.plane({ id: 'floor', x: 0, y: 0, z: 0, b: "#0f00f0", w: 39, h: 1000 });
 w.cube({ id: 'wall', x: 0, y: 1000, z: 0, b: "#ff0000", d: 200, w: 3, h: 3, });
 
