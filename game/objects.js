@@ -3,9 +3,13 @@ import { gradient } from "./util.js";
 let incrId = 0;
 const m10 = 10 * 60 * 1000;
 
-export const initShip = (rend) => {
+/**
+ * @param {W2} rend
+ * @param {number} r
+ */
+export const initShip = (rend, r) => {
   rend.group({ id: "ship" });
-  rend.group({ id: "shipPivot", g: "ship", z: 0.3 });
+  rend.group({ id: "shipPivot", g: "ship", y: -0.25, z: 0.05 });
   const stripe = gradient("#00FFFF", "#FFA500", 0, 0.081);
   rend.add("shipBody", {
     id: "body",
@@ -15,6 +19,12 @@ export const initShip = (rend) => {
     rx: -90,
     b: "#00FFFF",
     t: stripe,
+  });
+  rend.add("sphere", {
+    //collision shape
+    g: "ship",
+    size: r * 2,
+    mode: 2,
   });
   rend.add("shipFin", {
     id: "fin1",
@@ -103,6 +113,14 @@ export const initBoost = (rend, x, y) => {
   const id = "boost" + ++incrId;
   rend.group({ id, x, y });
 
+  rend.add("sphere", {
+    //collision shape
+    g: id,
+    mode: 2,
+    size: 0.75,
+    z: 0.25,
+  });
+
   // rend.cube({ g: id, z: 5.5, b: '#FFFF0011', w:0.3, h: 0.3, d: 10 })
   rend.group({ id: id + "p", g: id });
   rend.add("pyramid", {
@@ -136,10 +154,23 @@ export const initBoost = (rend, x, y) => {
     d: 0.3,
     h: -10,
   });
-  return id;
+  return {
+    id,
+    x,
+    y,
+    t: "boost",
+    s: "sphere",
+    r: 0.375,
+    z: 0.25,
+  };
 };
 
 const spikeBg = gradient("#8A2BE2", "#E6E6FA");
+/**
+ * @param {W2} rend
+ * @param {number} x
+ * @param {number} y
+ */
 export const initSpike = (rend, x, y) => {
   const id = "spike" + ++incrId;
   rend.add("pyramid", {
@@ -155,4 +186,36 @@ export const initSpike = (rend, x, y) => {
     t: spikeBg,
   });
   return id;
+};
+
+/**
+ * @param {W2} rend
+ */
+export const initFloor = (rend) => {
+  rend.add("plane", {
+    id: "floor",
+    x: 0,
+    y: 500,
+    z: 0,
+    b: "#E6E6FA",
+    w: 39,
+    h: 1000,
+    t: gradient("#D3D3D3", "#E6E6FA", 0, 0.85),
+  });
+};
+
+/**
+ * @param {W2} rend
+ */
+export const initExit = (rend) => {
+  rend.add("plane", {
+    id: "exit",
+    x: 0,
+    y: 1000,
+    z: 13,
+    b: "#FFFF00",
+    rx: 90,
+    w: 13 * 3,
+    h: 13 * 2,
+  });
 };
