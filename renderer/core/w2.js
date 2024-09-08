@@ -4,8 +4,29 @@ import baseVertex from "../shaders/base.vert";
 import baseFragment from "../shaders/base.frag";
 
 /**
+ * @typedef PropertiesHash
+ * @type {object}
+ * @property {string=} id - id that can be used to reference the object
+ * @property {string=} g - group name
+ * @property {number=} size - sets w, h and d to the same value
+ * @property {number=} w - width
+ * @property {number=} h - height
+ * @property {number=} d - depth
+ * @property {number=} x - position x
+ * @property {number=} y - position y
+ * @property {number=} z - position z
+ * @property {number=} rx - rotation x
+ * @property {number=} ry - rotation y
+ * @property {number=} rz - rotation z
+ * @property {string=} [b="888"] - background color
+ * @property {HTMLImageElement | HTMLCanvasElement | HTMLVideoElement=} [t] - texture
+ * @property {number=} [mix] - texture/color mix - 0: fully textured, 1: fully colored
+ * @property {number=} [s] - shading - 0: no shading, 1: shaded
+ * @property {number=} [mode] - mode - 0: points, 1: lines, 2: line loop, 3: line strip, 4: triangles, 5: triangle strip, 6: triangle fan
+ */
+
+/**
  * WebGL framework for 3D rendering
- * @implements {Renderer<Record<string, ModelSettings>>}
  */
 export default class W2 {
   #debug = false;
@@ -17,7 +38,6 @@ export default class W2 {
   // List of 3D #models that can be rendered by the framework
   // (See the end of the file for built-in #models: plane, billboard, cube, pyramid...)
   #models = {};
-  #lastFrame = 0;
 
   /**
    * Constructor for the W2 class.
@@ -26,8 +46,9 @@ export default class W2 {
    * @param {boolean} [options.debug=false] - Enable debug mode.
    * @param {string} [options.clearColor="#000000"] - The background color of the scene.
    * @param {Object} [options.light] - Initial light settings.
+   * @param {number} [options.ambient=0.2] - Initial ambient light settings.
    * @param {Object} [options.camera] - Initial camera settings.
-   * @param {Object} [options.models] - List of 3D models to be loaded
+   * @param {{[k: string]: {uv?: number[], indices?: number[], vertices: number[]}}} [options.geometry] - List of 3D models to be loaded
    */
   constructor(options) {
     this.#debug = options.debug;
@@ -58,6 +79,7 @@ export default class W2 {
     // When everything is loaded: set default light / camera
     this.light(options.light || { y: -1 });
     this.camera(options.camera || { fov: 30 });
+    this.ambient(options.ambient || 0.2);
     for (let name in options.geometry) {
       this.#models[name] = options.geometry[name];
       if (this.#models[name].normals) {
@@ -101,25 +123,15 @@ export default class W2 {
     }
 
     // Recompute the projection matrix if fov is set (near: 1, far: 1000, ratio: canvas ratio)
+    // prettier-ignore
     if (state.fov) {
-      this.projection = new DOMMatrix([
-        1 / Math.tan((state.fov * Math.PI) / 180) / (this.canvas.width / this.canvas.height),
-        0,
-        0,
-        0,
-        0,
-        1 / Math.tan((state.fov * Math.PI) / 180),
-        0,
-        0,
-        0,
-        0,
-        -1001 / 999,
-        -1,
-        0,
-        0,
-        -2002 / 999,
-        0,
-      ]);
+      this.projection =
+        new DOMMatrix([
+          (1 / Math.tan(state.fov * Math.PI / 180)) / (this.canvas.width / this.canvas.height), 0, 0, 0,
+          0, (1 / Math.tan(state.fov * Math.PI / 180)), 0, 0,
+          0, 0, -1001 / 999, -1,
+          0, 0, -2002 / 999, 0
+        ]);
     }
 
     // Save object's type,
@@ -191,15 +203,9 @@ export default class W2 {
 
   /**
    * Draws the scene.
-   * @param {number} now - The current time in milliseconds.
    * @param {number} dt - The time delta between frames in milliseconds.
    */
-  draw(now, dt) {
-    // Loop and measure time delta between frames
-    dt ||= now - this.#lastFrame;
-
-    this.#lastFrame = now;
-
+  draw(dt) {
     if (this.#next.camera?.g) {
       this.#render(this.#next[this.#next.camera.g], dt, 1);
     }
@@ -442,17 +448,26 @@ export default class W2 {
     1,
   ]; // rgb / rgba / rrggbb / rrggbbaa
 
+  /**
+   * @param {string} name
+   * @param {PropertiesHash} settings
+   * */
   add(name, settings) {
     this.#setState(settings, name);
   }
 
   // Built-in objects
   // ----------------
-
+  /**
+   * @param {PropertiesHash} t
+   */
   group(t) {
     this.#setState(t, "group");
   }
-
+  /**
+   * @param {PropertiesHash} t
+   * @param {number=} delay
+   */
   move(t, delay) {
     setTimeout(() => {
       this.#setState(t);
@@ -465,12 +480,20 @@ export default class W2 {
     }, delay || 1);
   }
 
+  /**
+   * @param {PropertiesHash} t
+   * @param {number=} delay
+   */
   camera(t, delay) {
     setTimeout(() => {
       this.#setState(t, (t.id = "camera"));
     }, delay || 1);
   }
 
+  /**
+   * @param {PropertiesHash} t
+   * @param {number=} delay
+   */
   light(t, delay) {
     delay
       ? setTimeout(() => {

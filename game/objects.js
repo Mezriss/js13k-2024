@@ -4,11 +4,12 @@ let incrId = 0;
 const m10 = 10 * 60 * 1000;
 
 export const initShip = (rend) => {
-  rend.group({ id: "ship", y: 2, z: 0.3, rz: 0 });
+  rend.group({ id: "ship" });
+  rend.group({ id: "shipPivot", g: "ship", z: 0.3 });
   const stripe = gradient("#00FFFF", "#FFA500", 0, 0.081);
   rend.add("shipBody", {
     id: "body",
-    g: "ship",
+    g: "shipPivot",
     x: -0.305,
     z: 0,
     rx: -90,
@@ -17,7 +18,7 @@ export const initShip = (rend) => {
   });
   rend.add("shipFin", {
     id: "fin1",
-    g: "ship",
+    g: "shipPivot",
     x: 0.3,
     z: -0.045,
     rx: 90,
@@ -27,7 +28,7 @@ export const initShip = (rend) => {
   });
   rend.add("shipFin", {
     id: "fin2",
-    g: "ship",
+    g: "shipPivot",
     x: -0.3,
     z: -0.045,
     rx: 90,
@@ -39,7 +40,7 @@ export const initShip = (rend) => {
   });
   rend.add("shipFin", {
     id: "fin3",
-    g: "ship",
+    g: "shipPivot",
     x: 0.3,
     z: -0.045,
     rx: 90,
@@ -51,7 +52,7 @@ export const initShip = (rend) => {
   });
   rend.add("shipFin", {
     id: "fin4",
-    g: "ship",
+    g: "shipPivot",
     x: -0.3,
     z: -0.045,
     rx: 90,
@@ -63,7 +64,7 @@ export const initShip = (rend) => {
   });
   rend.add("shipWing", {
     id: "wing1",
-    g: "ship",
+    g: "shipPivot",
     x: -0.55,
     z: -0.05,
     rx: -90,
@@ -73,7 +74,7 @@ export const initShip = (rend) => {
   });
   rend.add("shipWing", {
     id: "wing2",
-    g: "ship",
+    g: "shipPivot",
     x: 0.55,
     z: -0.05,
     rx: -90,
@@ -85,7 +86,7 @@ export const initShip = (rend) => {
   });
   rend.add("pyramid", {
     id: "canopy",
-    g: "ship",
+    g: "shipPivot",
     x: 0,
     y: 0.42,
     z: -0.038,
@@ -134,6 +135,24 @@ export const initBoost = (rend, x, y) => {
     w: 0.3,
     d: 0.3,
     h: -10,
+  });
+  return id;
+};
+
+const spikeBg = gradient("#8A2BE2", "#E6E6FA");
+export const initSpike = (rend, x, y) => {
+  const id = "spike" + ++incrId;
+  rend.add("pyramid", {
+    id,
+    x,
+    y,
+    z: 1.4,
+    rx: 90,
+    b: "#ff00ff",
+    w: 2,
+    h: 3,
+    d: 2,
+    t: spikeBg,
   });
   return id;
 };

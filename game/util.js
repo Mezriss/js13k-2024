@@ -32,3 +32,5 @@ export function gradient(colorA, colorB, vertical = 1, line = 0, debug = 0) {
   }
   return c;
 }
+
+export const clamp = (value, min, max) => Math.min(Math.max(value, min), max);
