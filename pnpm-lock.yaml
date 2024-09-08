@@ -7,26 +7,19 @@ settings:
 importers:
 
   .:
-    dependencies:
-      ogl:
-        specifier: ^1.0.8
-        version: 1.0.8
-      roadroller:
-        specifier: ^2.1.0
-        version: 2.1.0
-      twgl.js:
-        specifier: ^5.5.4
-        version: 5.5.4
+    devDependencies:
+      prettier:
+        specifier: ^3.3.3
+        version: 3.3.3
+      vite:
+        specifier: ^5.4.1
+        version: 5.4.3(@types/node@22.5.4)(terser@5.31.6)
       vite-plugin-glsl:
         specifier: ^1.3.0
         version: 1.3.0(rollup@4.21.2)(vite@5.4.3(@types/node@22.5.4)(terser@5.31.6))
       vite-plugin-singlefile:
         specifier: ^2.0.2
         version: 2.0.2(rollup@4.21.2)(vite@5.4.3(@types/node@22.5.4)(terser@5.31.6))
-    devDependencies:
-      vite:
-        specifier: ^5.4.1
-        version: 5.4.3(@types/node@22.5.4)(terser@5.31.6)
 
 packages:
 
@@ -304,10 +297,6 @@ packages:
     engines: {node: '>=12'}
     hasBin: true
 
-  esm@3.2.25:
-    resolution: {integrity: sha512-U1suiZ2oDVWv4zPO56S0NcR5QriEahGtdN2OR6FiOG4WJvcjBVFB0qI4+eKoWFH483PKGuLuu6V8Z4T5g63UVA==}
-    engines: {node: '>=6'}
-
   estree-walker@2.0.2:
     resolution: {integrity: sha512-Rfkk/Mp/DL7JVje3u18FxFujQlTNR2q6QfMSMB7AvCBx91NGj/ba3kCfza0f6dVDbw7YlRf/nDrn7pQrCCyQ/w==}
 
@@ -333,9 +322,6 @@ packages:
     engines: {node: ^10 || ^12 || ^13.7 || ^14 || >=15.0.1}
     hasBin: true
 
-  ogl@1.0.8:
-    resolution: {integrity: sha512-3LOqryx4qtWuQQT9QQL8yjGBNdqlonJeOwNY4+TwkrQhENYKegKt9pdWba3LzPSlGUWFTfeUDQoL9tSHMtKq3Q==}
-
   picocolors@1.1.0:
     resolution: {integrity: sha512-TQ92mBOW0l3LeMeyLV6mzy/kWr8lkd/hp3mTg7wYK7zJhuBStmGMBG0BdeDZS/dZx1IukaX6Bk11zcln25o1Aw==}
 
@@ -347,8 +333,8 @@ packages:
     resolution: {integrity: sha512-7KTLTdzdZZYscUc65XmjFiB73vBhBfbPztCYdUNvlaso9PrzjzcmjqBPR0lNGkcVlcO4BjiO5rK/qNz+XAen1Q==}
     engines: {node: ^10 || ^12 || >=14}
 
-  roadroller@2.1.0:
-    resolution: {integrity: sha512-4YfrQgMWC9w5SGvA6xfu9JGktOqEu2pwf4UrTu8ggf9wEv+hI7aTPMBRKWsTIvjhP4txX6eq954j3MONfOKAKQ==}
+  prettier@3.3.3:
+    resolution: {integrity: sha512-i2tDNA0O5IrMO757lfrdQZCc2jPNDVntV0m/+4whiDfWaTKfMNgR7Qz0NAeGz/nRqF4m5/6CLzbP4/liHt12Ew==}
     engines: {node: '>=14'}
     hasBin: true
 
@@ -376,9 +362,6 @@ packages:
   to-regex-range@5.0.1:
     resolution: {integrity: sha512-65P7iz6X5yEr1cwcgvQxbbIw7Uk3gOy5dIdtZ4rDveLqhrdJP+Li/Hx6tyK0NEb+2GCyneCMJiGqrADCSNk8sQ==}
     engines: {node: '>=8.0'}
-
-  twgl.js@5.5.4:
-    resolution: {integrity: sha512-6kFOmijOpmblTN9CCwOTCxK4lPg7rCyQjLuub6EMOlEp89Ex6yUcsMjsmH7andNPL2NE3XmHdqHeP5gVKKPhxw==}
 
   undici-types@6.19.8:
     resolution: {integrity: sha512-ve2KP6f/JnbPBFyobGHuerC9g1FYGn/F8n1LWTwNxCEzd6IfqTwUQcNXgEtmmQ6DlRrC1hrSrBnCZPokRrDHjw==}
@@ -628,8 +611,6 @@ snapshots:
       '@esbuild/win32-ia32': 0.21.5
       '@esbuild/win32-x64': 0.21.5
 
-  esm@3.2.25: {}
-
   estree-walker@2.0.2: {}
 
   fill-range@7.1.1:
@@ -648,8 +629,6 @@ snapshots:
 
   nanoid@3.3.7: {}
 
-  ogl@1.0.8: {}
-
   picocolors@1.1.0: {}
 
   picomatch@2.3.1: {}
@@ -660,9 +639,7 @@ snapshots:
       picocolors: 1.1.0
       source-map-js: 1.2.0
 
-  roadroller@2.1.0:
-    dependencies:
-      esm: 3.2.25
+  prettier@3.3.3: {}
 
   rollup@4.21.2:
     dependencies:
@@ -708,8 +685,6 @@ snapshots:
   to-regex-range@5.0.1:
     dependencies:
       is-number: 7.0.0
-
-  twgl.js@5.5.4: {}
 
   undici-types@6.19.8:
     optional: true
