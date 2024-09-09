@@ -13,12 +13,12 @@ export const initShip = (rend, r) => {
     b: "#00FFFF",
     t: stripe,
   });
-  rend.add("sphere", {
-    //collision shape
-    g: "ship",
-    size: r * 2,
-    mode: 2,
-  });
+  // rend.add("sphere", {
+  //   //collision shape
+  //   g: "ship",
+  //   size: r * 2,
+  //   mode: 2,
+  // });
   rend.add("shipFin", {
     id: "fin1",
     g: "shipPivot",

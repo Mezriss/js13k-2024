@@ -30,6 +30,6 @@ export const initSpike = (rend, x, y) => {
     t: "wall",
     s: "pyramid",
     r: 2,
-    h: 1,
+    h: 3,
   };
 };
