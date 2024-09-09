@@ -1,4 +1,4 @@
-import { initBoost, initExit, initFloor, initSpike } from "./objects.js";
+import { initBoost, initExit, initFloor, initSpike, initGate } from "./objects.js";
 
 /**
  * @param seed
@@ -12,50 +12,17 @@ export const generateLevel = (seed, rend) => {
   initFloor(rend);
   initExit(rend);
 
-  legacy(rend);
-
   objects.push(initBoost(rend, 2, 6));
 
   for (let i = 0; i < 15; i++) {
     objects.push(initBoost(rend, 13 * 1.5 - Math.round(Math.random() * 13 * 3), 16 + i * 30));
   }
-  objects.push(initSpike(rend, 0, 15));
+
   for (let i = 0; i < 100; i++) {
     objects.push(initSpike(rend, 13 * 1.5 - Math.round(Math.random() * 13 * 3), 10 + i * 5));
   }
 
-  return objects.sort((o1, o2) => o1.y - o2.y);
-};
+  objects.push(initGate(rend, 1, 0, 1000, 0));
 
-const legacy = (rend) => {
-  rend.add("cube", {
-    id: "wall1",
-    x: 0,
-    y: 999,
-    z: 13,
-    b: "#FF6347",
-    d: 26,
-    w: 3,
-    h: 3,
-  });
-  rend.add("cube", {
-    id: "wall2",
-    x: -3 * 5,
-    y: 999,
-    z: 13,
-    b: "#FF6347",
-    d: 26,
-    w: 3,
-    h: 3,
-  });
-  rend.add("cube", {
-    id: "wall3",
-    x: 3 * 4,
-    y: 999,
-    z: 13,
-    b: "#FF6347",
-    d: 26,
-    w: 3,
-    h: 3,
-  });
+  return objects.sort((o1, o2) => o1.y - o2.y);
 };

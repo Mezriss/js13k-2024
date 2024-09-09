@@ -1,6 +1,7 @@
 export { initShip } from "./objects/ship.js";
 export { initBoost } from "./objects/boost.js";
 export { initSpike } from "./objects/spike.js";
+export { initGate } from "./objects/gate.js";
 
 import { gradient } from "./util.js";
 

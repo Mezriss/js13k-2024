@@ -3,10 +3,12 @@ interface Entity {
   x: number;
   y: number;
   z: number;
-  r: number;
   t: "boost" | "wall"; //todo enum
-  s: "sphere" | "pyramid"; //todo enum
+  s: "sphere" | "pyramid" | "box"; //todo enum
+  r?: number;
+  w?: number;
   h?: number;
+  d?: number; //depth
 }
 
 interface State {

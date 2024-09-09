@@ -16,6 +16,7 @@ function startLevel(seed = 1, challenge = 1) {
     canvas: canvas,
     ...rendererDefaults,
   });
+  // window.drend = rend;
   /**
    * @type {State}
    */
@@ -64,7 +65,7 @@ startLevel(1);
 /*
 game0 checklist
 + collisions with pyramids
-- collision with boxes
++ collision with boxes
 - win on level end
 - gates closing
 - main menu with level/challenge selection
