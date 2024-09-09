@@ -21,7 +21,7 @@ function startLevel(seed = 1, challenge = 1) {
    */
   const state = { ...stateDefaults, r: playerR[challenge] };
   /**
-   * @type {Element[]}
+   * @type {Entity[]}
    */
   const level = generateLevel(seed, rend);
   initShip(rend, state.r);
@@ -33,7 +33,7 @@ function startLevel(seed = 1, challenge = 1) {
     state.lastFrame = t;
     handleInput(dt / 1000, state, rend);
     /**
-     * @type {Element}
+     * @type {Entity}
      */
     let collision = checkCollisions(state, level);
     if (collision?.t === "boost") {
@@ -45,14 +45,48 @@ function startLevel(seed = 1, challenge = 1) {
         1,
       );
       //todo actually delete
-      rend.move({ id: collision.id, z: 1000000 });
+      rend.move({ id: collision.id, z: 0.5, size: 0.5, a: 50 });
+      rend.delete(collision.id, 50);
+    }
+    if (collision?.t === "wall") {
+      state.alive = false;
     }
     //TODO update moving elements in the world
     //todo hide objects too close to camera?
     rend.draw(dt);
-    requestAnimationFrame(loop);
+    if (state.alive) requestAnimationFrame(loop);
   };
   requestAnimationFrame(loop);
 }
 
 startLevel(1);
+
+/*
+game0 checklist
++ collisions with pyramids
+- collision with boxes
+- win on level end
+- gates closing
+- main menu with level/challenge selection
+- transitions from level to menu and back
+- score in local storage
+
+game1 checklist
+- 1-2 moving enemies
+- different levels
+- jumping
+- sound effects
+
+game1.5 checklist
+- level intro animation
+- death animation
+- exhaust animation (and geometry?)
+- music
+- extra collectibles
+
+game2 checklist
+- animated exit
+- clouds
+- more hazards types
+- box art and trailer
+*/

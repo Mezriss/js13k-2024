@@ -1,14 +1,16 @@
-interface Element {
+interface Entity {
+  id: string;
   x: number;
   y: number;
   z: number;
   r: number;
-  t: "boost" | "wall";
-  s: "sphere" | "pyramid";
+  t: "boost" | "wall"; //todo enum
+  s: "sphere" | "pyramid"; //todo enum
   h?: number;
 }
 
 interface State {
+  alive: boolean;
   x: number;
   y: number;
   z: number;

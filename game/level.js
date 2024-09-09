@@ -3,7 +3,7 @@ import { initBoost, initExit, initFloor, initSpike } from "./objects.js";
 /**
  * @param seed
  * @param {W2} rend
- * @returns {Element[]}
+ * @returns {Entity[]}
  */
 export const generateLevel = (seed, rend) => {
   const objects = [];
@@ -18,6 +18,10 @@ export const generateLevel = (seed, rend) => {
 
   for (let i = 0; i < 15; i++) {
     objects.push(initBoost(rend, 13 * 1.5 - Math.round(Math.random() * 13 * 3), 16 + i * 30));
+  }
+  objects.push(initSpike(rend, 0, 15));
+  for (let i = 0; i < 100; i++) {
+    objects.push(initSpike(rend, 13 * 1.5 - Math.round(Math.random() * 13 * 3), 10 + i * 5));
   }
 
   return objects.sort((o1, o2) => o1.y - o2.y);
@@ -54,8 +58,4 @@ const legacy = (rend) => {
     w: 3,
     h: 3,
   });
-
-  for (let i = 0; i < 100; i++) {
-    initSpike(rend, 13 * 1.5 - Math.round(Math.random() * 13 * 3), 10 + i * 5);
-  }
 };

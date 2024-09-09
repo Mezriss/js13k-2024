@@ -1,7 +1,7 @@
 import { Sphere, Plane, Cube, Pyramid } from "../renderer/index.js";
 import ship from "../assets/ship.js";
 
-export const maxR = 5;
+export const maxR = 5; //maximum possible radius for collision quick checking
 
 export const playerR = [0.1, 0.25, 0.5]; // player collision radius based on challenge level
 export const scoreM = [0.75, 1, 1.25]; // score multiplier
@@ -37,6 +37,7 @@ export const rendererDefaults = {
 };
 
 export const stateDefaults = {
+  alive: true,
   x: 0,
   y: 0,
   z: baseZ,
@@ -46,3 +47,5 @@ export const stateDefaults = {
 
   lastFrame: 0,
 };
+
+export const m10 = 10 * 60 * 1000;

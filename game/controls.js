@@ -8,13 +8,15 @@ const input = {
 
 const keys = {
   ArrowLeft: 0,
+  KeyA: 0,
+  KeyD: 0,
   ArrowRight: 0,
   Space: 0,
 };
 
 const update = () => {
   input.jump = !!keys.Space;
-  input.direction = Math.sign(keys.ArrowRight - keys.ArrowLeft);
+  input.direction = Math.sign(Math.max(keys.ArrowRight, keys.KeyD) - Math.max(keys.ArrowLeft, keys.KeyA));
 };
 
 document.addEventListener("keydown", (e) => {

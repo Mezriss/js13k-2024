@@ -34,3 +34,6 @@ export function gradient(colorA, colorB, vertical = 1, line = 0, debug = 0) {
 }
 
 export const clamp = (value, min, max) => Math.min(Math.max(value, min), max);
+
+let incrId = 0;
+export const iid = (str) => str[0] + incrId++;

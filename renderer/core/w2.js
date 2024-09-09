@@ -474,9 +474,18 @@ export default class W2 {
     }, delay || 1);
   }
 
-  delete(t, delay) {
+  /**
+   * @param {string} id
+   * @param {number=} delay
+   */
+  delete(id, delay) {
     setTimeout(() => {
-      delete this.#next[t];
+      if (this.#next[id].type === "group") {
+        Object.keys(this.#next)
+          .filter((key) => this.#next[key].g === id)
+          .forEach((key) => this.delete(key));
+      }
+      delete this.#next[id];
     }, delay || 1);
   }
 

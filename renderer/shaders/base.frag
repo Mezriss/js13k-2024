@@ -1,6 +1,4 @@
 #version 300 es
-#pragma vscode_glsllint_stage: frag
-
 precision highp float;
 in vec4 v_pos, v_col, v_uv, v_normal;
 uniform vec3 light;

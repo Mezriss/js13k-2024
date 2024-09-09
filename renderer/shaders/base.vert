@@ -1,5 +1,4 @@
 #version 300 es
-#pragma vscode_glsllint_stage: vert
 precision highp float;
 in vec4 pos, col, uv, normal;
 uniform mat4 pv, eye, m, im;
