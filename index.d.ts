@@ -12,7 +12,6 @@ interface Entity {
 }
 
 interface State {
-  alive: boolean;
   x: number;
   y: number;
   z: number;

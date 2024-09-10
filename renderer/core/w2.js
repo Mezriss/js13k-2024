@@ -30,7 +30,7 @@ import baseFragment from "../shaders/base.frag";
  */
 export default class W2 {
   #debug = false;
-  #current = {};
+  current = {};
   #next = {};
   #textures = {};
   #objs = 0;
@@ -139,7 +139,7 @@ export default class W2 {
     // and reset f (the #animation timer)
     state = {
       type,
-      ...(this.#current[state.id] = this.#next[state.id] || {
+      ...(this.current[state.id] = this.#next[state.id] || {
         w: 1,
         h: 1,
         d: 1,
@@ -420,8 +420,8 @@ export default class W2 {
   // Interpolate a property between two values
   #lerp = (item, property) =>
     this.#next[item]?.a
-      ? this.#current[item][property] +
-        (this.#next[item][property] - this.#current[item][property]) * (this.#next[item].f / this.#next[item].a)
+      ? this.current[item][property] +
+        (this.#next[item][property] - this.current[item][property]) * (this.#next[item].f / this.#next[item].a)
       : this.#next[item][property];
 
   // Transition an item

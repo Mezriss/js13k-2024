@@ -12,10 +12,11 @@
     "printWidth": 120
   },
   "devDependencies": {
+    "@tomjs/vite-plugin-html": "^1.5.2",
+    "prettier": "^3.3.3",
     "vite": "^5.4.1",
     "vite-plugin-glsl": "^1.3.0",
-    "vite-plugin-singlefile": "^2.0.2",
-    "prettier": "^3.3.3"
+    "vite-plugin-singlefile": "^2.0.2"
   },
   "packageManager": "pnpm@9.9.0+sha512.60c18acd138bff695d339be6ad13f7e936eea6745660d4cc4a776d5247c540d0edee1a563695c183a66eb917ef88f2b4feb1fc25f32a7adcadc7aaf3438e99c1"
 }

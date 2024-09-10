@@ -3,17 +3,30 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Vite App</title>
+    <title>13th gate</title>
     <style>
       body {
         margin: 0;
         padding: 0;
         overflow: hidden;
       }
+      * {
+        position: absolute;
+      }
+      .menu #c {
+        opacity: 0;
+      }
+      .game *:not(#c) {
+        transition: 0.5s;
+        opacity: 0;
+      }
     </style>
   </head>
-  <body>
+  <body class="game">
     <canvas id="c"></canvas>
+
+    <div id="title">13th gate</div>
+    <div id="menu">Difficulty Easy Normal Hard</div>
     <script type="module" src="/main.js"></script>
   </body>
 </html>

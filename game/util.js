@@ -1,3 +1,5 @@
+import { localStorageKey } from "./const.js";
+
 export function gradient(colorA, colorB, vertical = 1, line = 0, debug = 0) {
   // Create a new canvas element
   const c = document.createElement("canvas");
@@ -37,3 +39,10 @@ export const clamp = (value, min, max) => Math.min(Math.max(value, min), max);
 
 let incrId = 0;
 export const iid = (str) => str[0] + incrId++;
+
+export const load = () => JSON.parse(localStorage.getItem(localStorageKey) || `""`) || { score: [] };
+export const save = (data) => {
+  localStorage.setItem(localStorageKey, JSON.stringify(data));
+};
+
+export const dampen = (prev, next, factor) => (1 - factor) * prev + factor * next;

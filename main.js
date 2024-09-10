@@ -2,8 +2,9 @@ import { Renderer } from "./renderer/index.js";
 import { generateLevel } from "./game/level";
 import { handleInput } from "./game/controls.js";
 import { initShip } from "./game/objects.js";
-import { playerR, rendererDefaults, scoreBoost, scoreM, stateDefaults } from "./game/const.js";
+import { levelLength, playerR, rendererDefaults, scoreBoost, scoreM, stateDefaults } from "./game/const.js";
 import { checkCollisions } from "./game/collision.js";
+import { load, save } from "./game/util.js";
 /**
  * @type {HTMLCanvasElement}
  */
@@ -11,7 +12,7 @@ const canvas = document.getElementById("c");
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 
-function startLevel(seed = 1, challenge = 1) {
+function startLevel(n, seed = 1, difficulty = 1) {
   const rend = new Renderer({
     canvas: canvas,
     ...rendererDefaults,
@@ -20,7 +21,7 @@ function startLevel(seed = 1, challenge = 1) {
   /**
    * @type {State}
    */
-  const state = { ...stateDefaults, r: playerR[challenge] };
+  const state = { ...stateDefaults, r: playerR[difficulty] };
   /**
    * @type {Entity[]}
    */
@@ -38,45 +39,63 @@ function startLevel(seed = 1, challenge = 1) {
      */
     let collision = checkCollisions(state, level);
     if (collision?.t === "boost") {
-      console.info(collision);
       state.boosts += 1;
-      state.score += scoreBoost * scoreM[challenge];
+      state.score += scoreBoost * scoreM[difficulty];
       level.splice(
         level.findIndex((el) => el.id === collision.id),
         1,
       );
-      //todo actually delete
       rend.move({ id: collision.id, z: 0.5, size: 0.5, a: 50 });
       rend.delete(collision.id, 50);
     }
     if (collision?.t === "wall") {
-      state.alive = false;
+      defeat();
+      return;
+    }
+    if (state.y >= levelLength) {
+      victory(n, state.score);
+      return;
     }
     //TODO update moving elements in the world
     //todo hide objects too close to camera?
     rend.draw(dt);
-    if (state.alive) requestAnimationFrame(loop);
+    requestAnimationFrame(loop);
   };
   requestAnimationFrame(loop);
 }
 
-startLevel(1);
+startLevel(1, 1, 1);
+
+function victory(level, score) {
+  const data = load();
+  data.score[level] = score;
+  save(data);
+  //todo some kind of victory animation
+  //todo return to main menu
+}
+
+function defeat() {
+  //todo launch loop that only has death animation
+  //todo eject to main menu
+}
 
 /*
 game0 checklist
 + collisions with pyramids
 + collision with boxes
-- win on level end
++ win on level end
 - gates closing
 - main menu with level/challenge selection
 - transitions from level to menu and back
-- score in local storage
++ score in local storage
++ slow down on edges
 
 game1 checklist
 - 1-2 moving enemies
 - different levels
-- jumping
++ jumping
 - sound effects
+- ramps
 
 game1.5 checklist
 - level intro animation

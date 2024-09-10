@@ -1,4 +1,5 @@
 import { initBoost, initExit, initFloor, initSpike, initGate } from "./objects.js";
+import { levelLength } from "./const.js";
 
 /**
  * @param seed
@@ -22,7 +23,7 @@ export const generateLevel = (seed, rend) => {
     objects.push(initSpike(rend, 13 * 1.5 - Math.round(Math.random() * 13 * 3), 10 + i * 5));
   }
 
-  objects.push(initGate(rend, 1, 0, 1000, 0));
+  objects.push(initGate(rend, 1, 0, levelLength, 0));
 
   return objects.sort((o1, o2) => o1.y - o2.y);
 };

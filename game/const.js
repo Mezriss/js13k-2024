@@ -1,17 +1,23 @@
 import { Sphere, Plane, Cube, Pyramid } from "../renderer/index.js";
 import ship from "../assets/ship.js";
 
+export const localStorageKey = "js13k13gate8bdb3b08a930";
+
 export const maxR = 5; //maximum possible radius for collision quick checking
 
 export const playerR = [0.1, 0.25, 0.5]; // player collision radius based on challenge level
 export const scoreM = [0.75, 1, 1.25]; // score multiplier
 
+export const levelLength = 300;
+
 export const baseSpeed = 10;
 export const speedIncrease = 2; //+speed per collected boost
 
-export const maxTurn = 7;
+export const maxTurn = 10;
 export const turnVelocity = 20;
-export const maxTilt = 20;
+export const tiltFactor = 3;
+
+export const jumpStrength = 12;
 
 export const baseZ = 0.25;
 
@@ -44,6 +50,7 @@ export const stateDefaults = {
   boosts: 0,
   score: 0,
   turn: 0,
+  vz: 0,
 
   lastFrame: 0,
 };
