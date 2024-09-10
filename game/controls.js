@@ -46,7 +46,6 @@ export function handleInput(dt, state, rend) {
   }
   const ax = Math.abs(state.x);
   if (ax > 18 && state.turn * state.x > 0) {
-    console.info(state.turn, ax, 1 - (ax % 18) / 3);
     state.turn *= ax > 19 ? 0 : 1 - (ax % 18) / 3;
   }
   state.x += state.turn * dt;

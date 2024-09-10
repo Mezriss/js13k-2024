@@ -23,7 +23,9 @@ export const generateLevel = (seed, rend) => {
     objects.push(initSpike(rend, 13 * 1.5 - Math.round(Math.random() * 13 * 3), 10 + i * 5));
   }
 
-  objects.push(initGate(rend, 1, 0, levelLength, 0));
+  for (let i = 0; i <= 12; i++) {
+    objects.push(initGate(rend, i, i * 3 - (13 * 3) / 2 - 1.5, levelLength, 50));
+  }
 
   return objects.sort((o1, o2) => o1.y - o2.y);
 };

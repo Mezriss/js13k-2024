@@ -46,3 +46,15 @@ export const save = (data) => {
 };
 
 export const dampen = (prev, next, factor) => (1 - factor) * prev + factor * next;
+
+// https://stackoverflow.com/a/12646864
+export function shuffle(array) {
+  for (let i = array.length - 1; i >= 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]];
+  }
+}
+
+export const easeOutCirc = (x) => {
+  return Math.sqrt(1 - Math.pow(x - 1, 2));
+};

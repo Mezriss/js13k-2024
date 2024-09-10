@@ -51,6 +51,7 @@ export const stateDefaults = {
   score: 0,
   turn: 0,
   vz: 0,
+  tweens: [],
 
   lastFrame: 0,
 };

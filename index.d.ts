@@ -20,4 +20,13 @@ interface State {
   score: number;
   turn: number;
   lastFrame: number;
+  tweens: {
+    id: string;
+    key: string;
+    from: number;
+    delta: number;
+    duration: number;
+    delay: number;
+    progress: number;
+  }[];
 }

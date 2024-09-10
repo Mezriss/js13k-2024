@@ -42,16 +42,7 @@ export const initBoost = (rend, x, y) => {
     h: -0.4,
   });
   rend.move({ id: id + "p", rz: 0.2 * m10, a: m10 });
-  rend.add("pyramid", {
-    g: id,
-    z: 5.7,
-    b: "#FFFF0011",
-    rx: 90,
-    rz: 45,
-    w: 0.3,
-    d: 0.3,
-    h: -10,
-  });
+
   return {
     id,
     x,

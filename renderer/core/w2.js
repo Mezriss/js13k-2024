@@ -1,4 +1,4 @@
-// WebGL framework
+// WebGL framework, slightly modified version of https://github.com/xem/W
 // ===============
 import baseVertex from "../shaders/base.vert";
 import baseFragment from "../shaders/base.frag";
@@ -238,7 +238,7 @@ export default class W2 {
     // #render all the objects in the scene
     for (let i in this.#next) {
       // #render the shapes with no texture and no transparency (RGB1 color)
-      if (!this.#next[i].t && this.col(this.#next[i].b)[3] == 1) {
+      if (!this.#next[i].t && this.col(this.#next[i].b)[3] === 1) {
         this.#render(this.#next[i], dt);
       }
 

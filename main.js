@@ -4,7 +4,7 @@ import { handleInput } from "./game/controls.js";
 import { initShip } from "./game/objects.js";
 import { levelLength, playerR, rendererDefaults, scoreBoost, scoreM, stateDefaults } from "./game/const.js";
 import { checkCollisions } from "./game/collision.js";
-import { load, save } from "./game/util.js";
+import { easeOutCirc, load, save, shuffle } from "./game/util.js";
 /**
  * @type {HTMLCanvasElement}
  */
@@ -28,6 +28,8 @@ function startLevel(n, seed = 1, difficulty = 1) {
   const level = generateLevel(seed, rend);
   initShip(rend, state.r);
   rend.move({ id: "camera", g: "ship" });
+  initGates(state);
+  initAnimations(state, level, rend);
 
   const loop = (t) => {
     state.lastFrame ||= t;
@@ -56,8 +58,7 @@ function startLevel(n, seed = 1, difficulty = 1) {
       victory(n, state.score);
       return;
     }
-    //TODO update moving elements in the world
-    //todo hide objects too close to camera?
+    animate(state, level, rend, dt);
     rend.draw(dt);
     requestAnimationFrame(loop);
   };
@@ -79,12 +80,68 @@ function defeat() {
   //todo eject to main menu
 }
 
+/**
+ * @param {State} state
+ */
+function initGates(state) {
+  const gates = [];
+  for (let i = 0; i < 13; i++) gates.push("gate" + i);
+  shuffle(gates);
+  gates.forEach((id, i) => {
+    state.tweens.push({
+      id,
+      key: "z",
+      from: 20 + i * 2,
+      delta: -(20 + i * 2),
+      duration: 5000,
+      delay: 5000 * i,
+      progress: 0,
+    });
+  });
+}
+
+/**
+ * @param {State} state
+ * @param {Entity[]}level
+ * @param {W2} rend
+ */
+function initAnimations(state, level, rend) {
+  state.tweens.forEach((tween) => {
+    move(tween.id, tween.key, tween.from, rend, level);
+  });
+}
+
+/**
+ * @param {State} state
+ * @param {Entity[]}level
+ * @param {W2} rend
+ * @param {number} dt
+ */
+function animate(state, level, rend, dt) {
+  state.tweens.forEach((tween) => {
+    if (tween.progress >= tween.duration) return;
+    if (tween.delay > 0) {
+      tween.delay -= dt;
+      return;
+    }
+    tween.progress += dt;
+    move(tween.id, tween.key, tween.from + tween.delta * easeOutCirc(tween.progress / tween.duration), rend, level);
+  });
+}
+
+function move(id, key, value, rend, level) {
+  rend.move({ id: id, [key]: value });
+  if (["x", "y", "z"].includes(key)) {
+    level.find((e) => e.id === id)[key] = value;
+  }
+}
+
 /*
 game0 checklist
 + collisions with pyramids
 + collision with boxes
 + win on level end
-- gates closing
++ gates closing
 - main menu with level/challenge selection
 - transitions from level to menu and back
 + score in local storage
