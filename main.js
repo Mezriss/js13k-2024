@@ -13,7 +13,8 @@ const canvas = document.getElementById("c");
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 
-function startLevel(n, seed = 1, difficulty = 1) {
+function startLevel(levelN, seed = 1) {
+  const difficulty = parseInt(document.querySelector("input:checked").value);
   const rend = new Renderer({
     canvas: canvas,
     ...rendererDefaults,
@@ -30,11 +31,14 @@ function startLevel(n, seed = 1, difficulty = 1) {
   initShip(rend, state.r);
   rend.move({ id: "camera", g: "ship" });
 
+  go("hud");
+
   const loop = (t) => {
     state.lastFrame ||= t;
     const dt = Math.min(t - state.lastFrame, 100);
     state.lastFrame = t;
     handleInput(dt / 1000, state, rend);
+    updateHUD(state.score, state.boosts);
     /**
      * @type {Entity}
      */
@@ -48,13 +52,14 @@ function startLevel(n, seed = 1, difficulty = 1) {
       );
       rend.move({ id: collision.id, z: 0.5, size: 0.5, a: 50 });
       rend.delete(collision.id, 50);
+      updateHUD(state.score, state.boosts);
     }
     if (collision?.t === "wall") {
       defeat();
       return;
     }
     if (state.y >= levelLength) {
-      victory(n, state.score);
+      victory(levelN, state.score);
       return;
     }
     animate(tweens, level, rend, dt);
@@ -63,20 +68,24 @@ function startLevel(n, seed = 1, difficulty = 1) {
   };
   requestAnimationFrame(loop);
 }
-
-startLevel(1, 1, 1);
+document.getElementById("ls").addEventListener("click", (e) => {
+  const l = e.target.dataset?.level;
+  if (l) startLevel(l, 1);
+});
 
 function victory(level, score) {
   const data = load();
-  data.score[level] = score;
+  data.score[level - 1] = score;
   save(data);
+  document.getElementById("score").innerHTML = score;
+  renderLevelSelector();
+  go("win");
   //todo some kind of victory animation
-  //todo return to main menu
 }
 
 function defeat() {
+  go("defeat");
   //todo launch loop that only has death animation
-  //todo eject to main menu
 }
 
 /**
@@ -101,14 +110,42 @@ function animate(tweens, level, rend, dt) {
   });
 }
 
+//UI
+window.go = function go(view) {
+  const [from, to] = document.querySelectorAll(`.active,#${view}`);
+  from.classList.toggle("active");
+  to.classList.toggle("active");
+  document.querySelectorAll("button").forEach((el) => el.blur());
+};
+
+function renderLevelSelector() {
+  const ls = document.getElementById("ls");
+  const data = load();
+  let out = "";
+  for (let i = 0; i < 5; i++) {
+    out += `<div><button data-level="${i + 1}"${
+      i > 0 && !data.score[i - 1] ? "disabled" : ""
+    }>${i + 1}</button>${data.score[i] || "Not Passed"}</div>`;
+  }
+
+  ls.innerHTML = out;
+}
+renderLevelSelector();
+
+function updateHUD(score, boosts) {
+  const [sel, bel] = document.querySelectorAll("#hscore,#hboosts");
+  sel.innerHTML = score;
+  bel.innerHTML = boosts + "  &#9671;";
+}
+
 /*
 game0 checklist
 + collisions with pyramids
 + collision with boxes
 + win on level end
 + gates closing
-- main menu with level/challenge selection
-- transitions from level to menu and back
++ main menu with level/challenge selection
++ transitions from level to menu and back
 + score in local storage
 + slow down on edges
 

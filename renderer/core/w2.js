@@ -398,7 +398,6 @@ export default class W2 {
       this.gl.bindBuffer(34963 /* ELEMENT_ARRAY_BUFFER */, this.#models[object.type].indicesBuffer);
     }
 
-    if (object.b === "#FF6347" && object.o) console.info(this.col(object.b, object.o), object.o);
     // Set the object's color
     this.gl.vertexAttrib4fv(this.gl.getAttribLocation(this.program, "col"), this.col(object.b, object.o));
 

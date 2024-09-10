@@ -6,27 +6,194 @@
     <title>13th gate</title>
     <style>
       body {
+        background: #002b36;
         margin: 0;
         padding: 0;
         overflow: hidden;
+        color: #e6e6fa;
+        font-family: sans-serif;
+        font-variant: small-caps;
       }
-      * {
+      body > div {
+        background: #002b36;
         position: absolute;
-      }
-      .menu #c {
+        top: 0;
+        width: 100vw;
+        height: 100vh;
+        display: grid;
         opacity: 0;
+        pointer-events: none;
+        grid-template: 30% 40% 20% 1fr / 1fr 50% 1fr;
+        grid-template-areas: "l t r" ". c ." " . b ." ". h .";
+        transition: 1s;
       }
-      .game *:not(#c) {
-        transition: 0.5s;
-        opacity: 0;
+      #win {
+        background: #999900;
+        & > div {
+          grid-area: c;
+          font-size: 5vw;
+          text-align: center;
+        }
+      }
+      .active {
+        opacity: 1;
+        pointer-events: auto;
+      }
+      button {
+        background: transparent;
+        border: 2px solid #e6e6fa;
+        font-size: 15vb;
+        color: #e6e6fa;
+        border-radius: 5px;
+        grid-area: b;
+        font-weight: 100;
+        &:hover {
+          border-color: #ffff00;
+        }
+        &[disabled] {
+          color: #a9a9a9;
+          border-color: #9a9a9a;
+        }
+      }
+
+      #t {
+        grid-area: t;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 5vw;
+        strong {
+          color: #ff6347;
+        }
+      }
+      #ls {
+        grid-area: c;
+        display: flex;
+        justify-content: space-around;
+        text-align: center;
+        button {
+          display: block;
+          margin-bottom: 5px;
+        }
+      }
+      #dif {
+        grid-area: b;
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        label {
+          border: 2px solid #e6e6fa;
+          font-size: 1.5vw;
+          width: 10vw;
+          height: 8vh;
+          display: grid;
+          place-items: center;
+          &:has(> :checked) {
+            border-color: #ffff00;
+          }
+          [type="radio"] {
+            display: none;
+          }
+        }
+      }
+
+      #h {
+        grid-area: h;
+        text-align: center;
+        line-height: 1.5;
+        kbd {
+          padding: 0 5px;
+          background: rgba(0, 0, 0, 0.2);
+        }
+      }
+      #hud {
+        background: transparent;
+        div {
+          display: grid;
+          place-items: center;
+          border-bottom: 2px solid;
+          width: 50%;
+          height: 50%;
+          font-size: 2vw;
+        }
+      }
+      #hscore {
+        grid-area: l;
+        transform: rotate(-15deg);
+      }
+      #hboosts {
+        grid-area: r;
+        justify-self: end;
+        color: #ffff00;
+        transform: rotate(15deg);
+      }
+      #defeat {
+        background: #993b2b;
+        & > div {
+          grid-area: c;
+          font-size: 10vw;
+          text-align: center;
+        }
       }
     </style>
   </head>
-  <body class="game">
+  <body>
     <canvas id="c"></canvas>
 
+    <div id="splash" class="active">
+      <button onclick="go('menu')">Start</button>
+    </div>
+    <div id="win">
+      <div>
+        Escape
+        <div id="score"></div>
+      </div>
+      <button onclick="go('menu')">Continue</button>
+    </div>
+    <div id="defeat">
+      <div>Death</div>
+      <button onclick="go('menu')">Continue</button>
+    </div>
+    <div id="hud">
+      <div id="hscore"></div>
+      <div id="hboosts"></div>
+    </div>
+    <div id="menu">
+      <div id="t"><strong>13</strong>th gate</div>
+      <div id="ls">
+        <div>
+          <button>1</button>
+          500012
+        </div>
+        <div>
+          <button>2</button>
+          500012
+        </div>
+        <div>
+          <button>3</button>
+          unchallenged
+        </div>
+        <div>
+          <button disabled>4</button>
+          unpassed
+        </div>
+        <div>
+          <button disabled>5</button>
+          not passed
+        </div>
+      </div>
+      <div id="dif">
+        <label><input type="radio" value="1" name="dif" />Easy</label>
+        <label><input type="radio" value="2" name="dif" checked />Normal</label>
+        <label><input type="radio" value="3" name="dif" />Hard</label>
+      </div>
+      <div id="h">
+        <kbd>←</kbd>, <kbd>→</kbd> or <kbd>A</kbd>, <kbd>D</kbd> to strafe<br />
+        <kbd>Space</kbd> to jump by consuming a boost
+      </div>
+    </div>
+
     <div id="title">13th gate</div>
-    <div id="menu">Difficulty Easy Normal Hard</div>
     <script type="module" src="/main.js"></script>
   </body>
 </html>
