@@ -19,6 +19,7 @@ import baseFragment from "../shaders/base.frag";
  * @property {number=} ry - rotation y
  * @property {number=} rz - rotation z
  * @property {string=} [b="888"] - background color
+ * @property {number} [o=1] - opacity
  * @property {HTMLImageElement | HTMLCanvasElement | HTMLVideoElement=} [t] - texture
  * @property {number=} [mix] - texture/color mix - 0: fully textured, 1: fully colored
  * @property {number=} [s] - shading - 0: no shading, 1: shaded
@@ -150,6 +151,7 @@ export default class W2 {
         ry: 0,
         rz: 0,
         b: "888",
+        o: 1,
         mode: 4,
         mix: 0,
       }),
@@ -238,7 +240,7 @@ export default class W2 {
     // #render all the objects in the scene
     for (let i in this.#next) {
       // #render the shapes with no texture and no transparency (RGB1 color)
-      if (!this.#next[i].t && this.col(this.#next[i].b)[3] === 1) {
+      if (!this.#next[i].t && this.col(this.#next[i].b, this.#next[i].o)[3] === 1) {
         this.#render(this.#next[i], dt);
       }
 
@@ -396,8 +398,9 @@ export default class W2 {
       this.gl.bindBuffer(34963 /* ELEMENT_ARRAY_BUFFER */, this.#models[object.type].indicesBuffer);
     }
 
+    if (object.b === "#FF6347" && object.o) console.info(this.col(object.b, object.o), object.o);
     // Set the object's color
-    this.gl.vertexAttrib4fv(this.gl.getAttribLocation(this.program, "col"), this.col(object.b));
+    this.gl.vertexAttrib4fv(this.gl.getAttribLocation(this.program, "col"), this.col(object.b, object.o));
 
     // Draw
     // Both indexed and unindexed #models are supported.
@@ -440,12 +443,12 @@ export default class W2 {
   ambient = (a) => (this.ambientLight = a);
 
   // Convert an rgb/rgba hex string into a vec4
-  col = (c) => [
+  col = (c, o = 1) => [
     ...c
       .replace("#", "")
       .match(c.length < 5 ? /./g : /../g)
       .map((a) => ("0x" + a) / (c.length < 5 ? 15 : 255)),
-    1,
+    o,
   ]; // rgb / rgba / rrggbb / rrggbbaa
 
   /**
