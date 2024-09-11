@@ -1,5 +1,6 @@
 import { baseSpeed, baseZ, jumpStrength, tiltFactor, maxTurn, speedIncrease, turnVelocity } from "./const.js";
 import { clamp, dampen } from "./util.js";
+import { play, tracks } from "./sound.js";
 
 const input = {
   direction: 0,
@@ -54,9 +55,14 @@ export function handleInput(dt, state, rend) {
   if (input.jump && state.z <= baseZ && state.boosts) {
     state.vz = jumpStrength;
     state.boosts -= 1;
+    play(tracks.jump);
   }
   state.vz = Math.max(-50, state.vz - 10 * dt);
-  state.z = Math.max(baseZ, state.z + state.vz * dt);
+  const nz = state.z + state.vz * dt;
+  if (state.z > baseZ && nz <= baseZ) {
+    play(tracks.fall);
+  }
+  state.z = Math.max(baseZ, nz);
 
   rend.move({
     id: "shipPivot",

@@ -5,15 +5,17 @@ import { initShip } from "./game/objects.js";
 import { levelLength, playerR, rendererDefaults, scoreBoost, scoreM, stateDefaults } from "./game/const.js";
 import { checkCollisions } from "./game/collision.js";
 import { easeOutCirc, load, save } from "./game/util.js";
+import { play, tracks } from "./game/sound.js";
 
 /**
  * @type {HTMLCanvasElement}
  */
-const canvas = document.getElementById("c");
-canvas.width = window.innerWidth;
-canvas.height = window.innerHeight;
+const canvas = document.querySelector("#c");
 
 function startLevel(levelN, seed = 1) {
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+
   const difficulty = parseInt(document.querySelector("input:checked").value);
   const rend = new Renderer({
     canvas: canvas,
@@ -53,6 +55,7 @@ function startLevel(levelN, seed = 1) {
       rend.move({ id: collision.id, z: 0.5, size: 0.5, a: 50 });
       rend.delete(collision.id, 50);
       updateHUD(state.score, state.boosts);
+      play(tracks.boost);
     }
     if (collision?.t === "wall") {
       defeat();
@@ -68,7 +71,7 @@ function startLevel(levelN, seed = 1) {
   };
   requestAnimationFrame(loop);
 }
-document.getElementById("ls").addEventListener("click", (e) => {
+document.querySelector("#ls").addEventListener("click", (e) => {
   const l = e.target.dataset?.level;
   if (l) startLevel(l, 1);
 });
@@ -77,13 +80,14 @@ function victory(level, score) {
   const data = load();
   data.score[level - 1] = score;
   save(data);
-  document.getElementById("score").innerHTML = score;
+  document.querySelector("#score").innerHTML = score;
   renderLevelSelector();
   go("win");
   //todo some kind of victory animation
 }
 
 function defeat() {
+  play(tracks.explosion);
   go("defeat");
   //todo launch loop that only has death animation
 }
@@ -119,7 +123,7 @@ window.go = function go(view) {
 };
 
 function renderLevelSelector() {
-  const ls = document.getElementById("ls");
+  const ls = document.querySelector("#ls");
   const data = load();
   let out = "";
   for (let i = 0; i < 5; i++) {
@@ -137,35 +141,3 @@ function updateHUD(score, boosts) {
   sel.innerHTML = score;
   bel.innerHTML = boosts + "  &#9671;";
 }
-
-/*
-game0 checklist
-+ collisions with pyramids
-+ collision with boxes
-+ win on level end
-+ gates closing
-+ main menu with level/challenge selection
-+ transitions from level to menu and back
-+ score in local storage
-+ slow down on edges
-
-game1 checklist
-- 1-2 moving enemies
-- different levels
-+ jumping
-- sound effects
-- ramps
-
-game1.5 checklist
-- level intro animation
-- death animation
-- exhaust animation (and geometry?)
-- music
-- extra collectibles
-
-game2 checklist
-- animated exit
-- clouds
-- more hazards types
-- box art and trailer
-*/
