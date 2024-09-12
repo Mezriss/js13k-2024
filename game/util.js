@@ -48,9 +48,9 @@ export const save = (data) => {
 export const dampen = (prev, next, factor) => (1 - factor) * prev + factor * next;
 
 // https://stackoverflow.com/a/12646864
-export function shuffle(array) {
+export function shuffle(array, prng) {
   for (let i = array.length - 1; i >= 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
+    const j = Math.floor(prng() * (i + 1));
     [array[i], array[j]] = [array[j], array[i]];
   }
 }
@@ -58,3 +58,19 @@ export function shuffle(array) {
 export const easeOutCirc = (x) => {
   return Math.sqrt(1 - Math.pow(x - 1, 2));
 };
+
+export function splitmix32(a) {
+  return function () {
+    a |= 0;
+    a = (a + 0x9e3779b9) | 0;
+    let t = a ^ (a >>> 16);
+    t = Math.imul(t, 0x21f0aaad);
+    t = t ^ (t >>> 15);
+    t = Math.imul(t, 0x735a2d97);
+    return ((t = t ^ (t >>> 15)) >>> 0) / 4294967296;
+  };
+}
+
+export const randN = (n, r) => Math.floor(r() * n);
+export const randN1 = (n, r) => Math.floor(r() * (n + 1));
+export const randF = (n, r) => r() * n;

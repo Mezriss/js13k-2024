@@ -2,7 +2,16 @@ import { Renderer } from "./renderer/index.js";
 import { generateLevel } from "./game/level";
 import { handleInput } from "./game/controls.js";
 import { initFloor, initShip } from "./game/objects.js";
-import { levelLength, logo, playerR, rendererDefaults, scoreBoost, scoreM, stateDefaults } from "./game/const.js";
+import {
+  levelLength,
+  logo,
+  playerR,
+  rendererDefaults,
+  scoreBoost,
+  scoreM,
+  seededRng,
+  stateDefaults,
+} from "./game/const.js";
 import { checkCollisions } from "./game/collision.js";
 import { easeOutCirc, load, save } from "./game/util.js";
 import { play, tracks } from "./game/sound.js";
@@ -29,7 +38,7 @@ function startLevel(levelN, seed = 1) {
   /**
    * @type {Entity[]}
    */
-  const [level, tweens] = generateLevel(seed, rend);
+  const [level, tweens] = generateLevel(levelN, seed, rend, seededRng[seed]);
   initShip(rend, state.r);
   rend.move({ id: "camera", g: "ship" });
 
@@ -61,7 +70,7 @@ function startLevel(levelN, seed = 1) {
       defeat();
       return;
     }
-    if (state.y >= levelLength) {
+    if (state.y >= levelLength * (1 + 0.2 * (levelN - 1))) {
       victory(levelN, state.score);
       return;
     }

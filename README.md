@@ -13,7 +13,7 @@
 
 ## v1 checklist
 - [ ] 1-2 moving enemies  
-- [ ] different levels    
+- [X] different levels    
 - [X] jumping     
 - [X] sound effects   
 - [ ] ramps   

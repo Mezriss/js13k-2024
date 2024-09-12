@@ -1,3 +1,4 @@
+import { splitmix32 } from "./util.js";
 import { Sphere, Plane, Cube, Pyramid } from "../renderer/index.js";
 import ship from "../assets/ship.js";
 
@@ -51,7 +52,6 @@ export const stateDefaults = {
   score: 0,
   turn: 0,
   vz: 0,
-  tweens: [],
 
   lastFrame: 0,
 };
@@ -71,3 +71,5 @@ export const logo = [
   [2, , 2, , 2, , 2, , , 2, , , 2, ,],
   [2, 2, 2, , 2, , 2, , , 2, , , 2, 2, 2],
 ];
+
+export const seededRng = [splitmix32(1), splitmix32(1), splitmix32(1), splitmix32(1), Math.random];

@@ -26,12 +26,13 @@ export const initFloor = (rend, length = levelLength) => {
 
 /**
  * @param {W2} rend
+ * @param {number} length
  */
-export const initExit = (rend) => {
+export const initExit = (rend, length) => {
   rend.add("plane", {
     id: "exit",
     x: 0,
-    y: levelLength - 1,
+    y: length - 1,
     z: 13,
     b: "#FFFF00",
     rx: 90,

@@ -30,5 +30,4 @@ interface State {
   score: number;
   turn: number;
   lastFrame: number;
-  tweens: Tween[];
 }
