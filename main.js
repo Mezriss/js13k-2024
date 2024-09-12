@@ -1,8 +1,8 @@
 import { Renderer } from "./renderer/index.js";
 import { generateLevel } from "./game/level";
 import { handleInput } from "./game/controls.js";
-import { initShip } from "./game/objects.js";
-import { levelLength, playerR, rendererDefaults, scoreBoost, scoreM, stateDefaults } from "./game/const.js";
+import { initFloor, initShip } from "./game/objects.js";
+import { levelLength, logo, playerR, rendererDefaults, scoreBoost, scoreM, stateDefaults } from "./game/const.js";
 import { checkCollisions } from "./game/collision.js";
 import { easeOutCirc, load, save } from "./game/util.js";
 import { play, tracks } from "./game/sound.js";
@@ -39,7 +39,7 @@ function startLevel(levelN, seed = 1) {
     state.lastFrame ||= t;
     const dt = Math.min(t - state.lastFrame, 100);
     state.lastFrame = t;
-    handleInput(dt / 1000, state, rend);
+    handleInput(dt / 1000, state, rend, difficulty);
     updateHUD(state.score, state.boosts);
     /**
      * @type {Entity}
@@ -141,3 +141,65 @@ function updateHUD(score, boosts) {
   sel.innerHTML = score;
   bel.innerHTML = boosts + "  &#9671;";
 }
+
+function renderIntro() {
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+
+  const ratio = window.innerWidth / window.innerHeight;
+  let [x, y, z, rx, ry, rz, fov] = [2.5, -2, 2, 68, -19, 28, 27];
+  fov *= 1 + Math.max(0, 1.5 - ratio);
+
+  const camera = {
+    x,
+    y,
+    z,
+    rx,
+    fov,
+    ry,
+    rz,
+  };
+  const rend = new Renderer({
+    canvas: canvas,
+    ...rendererDefaults,
+    camera,
+  });
+  initShip(rend, 1);
+  initFloor(rend, 1000);
+  rend.move({ id: "floor", w: 22, y: -10 });
+  rend.group({ id: "logo", y: 50, z: logo.length, x: -logo[0].length / 2 + 1 });
+  for (let i = 0; i < logo.length; i += 1) {
+    for (let j = 0; j < logo[0].length; j += 1) {
+      if (logo[i][j]) {
+        rend.add("cube", {
+          g: "logo",
+          x: j,
+          z: -i,
+          b: [, "f00", "fff"][logo[i][j]],
+        });
+      }
+    }
+  }
+  rend.draw(1); //there is something wrong with light setup
+  rend.draw(1);
+  //
+  // const loop = (dt) => {
+  //   rend.draw(dt);
+  //   requestAnimationFrame(loop);
+  // };
+  // loop();
+  //
+  // const d = document.querySelector("#debug");
+  // d.innerHTML = ["x", "y", "z", "rx", "ry", "rz", "fov"]
+  //   .map((v) => `${v} <input id="c${v}" type="number" value="${camera[v]}" step="1" />`)
+  //   .join("");
+  //
+  // d.addEventListener("change", () => {
+  //   const [x, y, z, rx, ry, rz, fov] = [...document.querySelectorAll("#cx,#cy,#cz,#crx,#cry,#crz,#cfov")].map((inp) =>
+  //     parseFloat(inp.value),
+  //   );
+  //   console.info([x, y, z, rx, ry, rz, fov]);
+  //   rend.move({ id: "camera", x, y, z, rx, ry, rz, fov });
+  // });
+}
+renderIntro();

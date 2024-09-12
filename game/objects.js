@@ -9,16 +9,17 @@ import { gradient } from "./util.js";
 
 /**
  * @param {W2} rend
+ * @param {number} length
  */
-export const initFloor = (rend) => {
+export const initFloor = (rend, length = levelLength) => {
   rend.add("plane", {
     id: "floor",
     x: 0,
-    y: levelLength / 2,
+    y: length / 2,
     z: 0,
     b: "#E6E6FA",
     w: 39,
-    h: levelLength,
+    h: length,
     t: gradient("#D3D3D3", "#E6E6FA", 0, 0.85),
   });
 };

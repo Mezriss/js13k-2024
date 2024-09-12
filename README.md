@@ -17,7 +17,7 @@
 - [X] jumping     
 - [X] sound effects   
 - [ ] ramps   
-- [ ] working difficulty levels
+- [X] working difficulty levels
 
 ## v1.5 checklist
 - [ ] level intro animation   

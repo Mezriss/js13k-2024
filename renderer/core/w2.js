@@ -471,9 +471,11 @@ export default class W2 {
    * @param {number=} delay
    */
   move(t, delay) {
-    setTimeout(() => {
-      this.#setState(t);
-    }, delay || 1);
+    if (delay)
+      setTimeout(() => {
+        this.#setState(t);
+      }, delay);
+    else this.#setState(t);
   }
 
   /**
@@ -496,9 +498,11 @@ export default class W2 {
    * @param {number=} delay
    */
   camera(t, delay) {
-    setTimeout(() => {
-      this.#setState(t, (t.id = "camera"));
-    }, delay || 1);
+    if (delay)
+      setTimeout(() => {
+        this.#setState(t, (t.id = "camera"));
+      }, delay);
+    else this.#setState(t, (t.id = "camera"));
   }
 
   /**

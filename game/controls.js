@@ -34,11 +34,11 @@ document.addEventListener("blur", () => {
   for (let k in keys) keys[k] = 0;
 });
 
-export function handleInput(dt, state, rend) {
+export function handleInput(dt, state, rend, difficulty) {
   state.y += (baseSpeed + state.boosts * speedIncrease) * dt;
 
   // turning
-  const dtv = turnVelocity * dt;
+  const dtv = turnVelocity * (1.2 - difficulty / 10) * dt;
   if (input.direction) {
     state.turn = clamp(state.turn + dtv * input.direction, -maxTurn, maxTurn);
   } else if (state.turn) {

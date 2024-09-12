@@ -15,6 +15,9 @@ export default defineConfig({
     viteSingleFile({ removeViteModuleLoader: true }),
     ectPlugin()
   ],
+  build: {
+    target: "esnext",
+  },
 });
 
 /**

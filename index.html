@@ -27,6 +27,13 @@
         grid-template-areas: "l t r" ". c ." " . b ." ". h .";
         transition: 1s;
       }
+      #splash {
+        background: transparent;
+      }
+      #splash button {
+        border-color: #ff6347;
+        color: #ff6347;
+      }
       #win {
         background: #999900;
       }
@@ -49,7 +56,7 @@
         font-weight: 100;
       }
       button:hover {
-        border-color: #ffff00;
+        border-color: #ffff00 !important;
       }
       button[disabled] {
         color: #a9a9a9;
@@ -135,9 +142,21 @@
         font-size: 10vw;
         text-align: center;
       }
+      #debug {
+        position: fixed;
+        z-index: 1000;
+        right: 50px;
+        bottom: 50px;
+        background: #000;
+      }
+      #debug * {
+        display: block;
+      }
     </style>
   </head>
   <body>
+    <main id="debug"></main>
+
     <canvas id="c"></canvas>
 
     <div id="splash" class="active">
@@ -160,28 +179,7 @@
     </div>
     <div id="menu">
       <div id="t"><strong>13</strong>th gate</div>
-      <div id="ls">
-        <div>
-          <button>1</button>
-          500012
-        </div>
-        <div>
-          <button>2</button>
-          500012
-        </div>
-        <div>
-          <button>3</button>
-          unchallenged
-        </div>
-        <div>
-          <button disabled>4</button>
-          unpassed
-        </div>
-        <div>
-          <button disabled>5</button>
-          not passed
-        </div>
-      </div>
+      <div id="ls"></div>
       <div id="dif">
         <label><input type="radio" value="1" name="dif" />Easy</label>
         <label><input type="radio" value="2" name="dif" checked />Normal</label>
