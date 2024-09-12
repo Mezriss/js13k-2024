@@ -82,7 +82,7 @@ function startLevel(levelN, seed = 1) {
 }
 document.querySelector("#ls").addEventListener("click", (e) => {
   const l = e.target.dataset?.level;
-  if (l) startLevel(l, 1);
+  if (l) startLevel(parseInt(l, 10), 1);
 });
 
 function victory(level, score) {

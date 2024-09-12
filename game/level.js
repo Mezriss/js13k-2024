@@ -1,12 +1,13 @@
 import { initBoost, initExit, initFloor, initSpike, initGate } from "./objects.js";
 import { baseSpeed, levelLength, speedIncrease } from "./const.js";
 import { shuffle } from "./util.js";
+import { patterns } from "./patterns.js";
 
 /**
  * @param {number} levelN
  * @param seed
  * @param {W2} rend
- * @param {function} prng
+ * @param {PRNG} prng
  * @returns [Entity[], Tween[]]
  */
 export const generateLevel = (levelN, seed, rend, prng) => {
@@ -33,20 +34,40 @@ export const generateLevel = (levelN, seed, rend, prng) => {
 
   objects.push(initBoost(rend, 0, baseSpeed * 4));
 
-  for (let i = 0; i < 15; i++) {
-    objects.push(initBoost(rend, 13 * 1.5 - Math.round(prng() * 13 * 3), 16 + i * 20));
+  for (let i = 1; i < (totalLength - obstacleOffset) / 20; i++) {
+    objects.push(initBoost(rend, prng.r(-13, 13), obstacleOffset + i * 20));
   }
 
-  for (let i = 0; i < 100; i++) {
-    objects.push(
-      initSpike(
-        rend,
-        13 * 1.5 - Math.round(prng() * 13 * 3),
-        10 + i * 5,
-        Math.ceil(prng() * 4),
-        Math.floor(prng() * 4) + 3,
-      ),
-    );
+  // every Xm do a group
+  // each group is N obstacles in a certain pattern;
+  // pattern is a list of x,y,s,h offsets, where one of the params can be random
+
+  const addGroup = (center) => {
+    const groupAmount = prng.r(2, 2 + levelN);
+    const spikes = [];
+
+    const selectedPattern = patterns[prng.n(patterns.length - 1)];
+    spikes.push(...selectedPattern(center, groupAmount, prng));
+
+    spikes.forEach(([x, y, w, h]) => objects.push(initSpike(rend, x, y, w, h)));
+  };
+
+  for (let i = 0; i < (totalLength - obstacleOffset) / (20 - levelN); i++) {
+    const cy = obstacleOffset + (20 - levelN) * i;
+    switch (prng.n(2)) {
+      case 0:
+        addGroup([prng.r(-5, 5), cy]);
+        break;
+      case 1:
+        addGroup([prng.r(-14, -2), cy]);
+        addGroup([prng.r(2, 14), cy]);
+        break;
+      case 2:
+        addGroup([prng.r(-14, -2), cy]);
+        addGroup([prng.r(-5, 5), cy - 5]);
+        addGroup([prng.r(2, 14), cy]);
+        break;
+    }
   }
 
   const gates = [];
@@ -58,7 +79,6 @@ export const generateLevel = (levelN, seed, rend, prng) => {
   gates.forEach((id, i) => {
     objects.push(initGate(rend, id, id * 3 - (13 * 3) / 2 + 1.5, totalLength, 30 + i * 5));
     const delay = closeStart + offset * i;
-    console.info(delay);
     tweens.push({
       id: "gate" + id + "c",
       key: "o",

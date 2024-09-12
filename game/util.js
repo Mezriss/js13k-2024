@@ -50,7 +50,7 @@ export const dampen = (prev, next, factor) => (1 - factor) * prev + factor * nex
 // https://stackoverflow.com/a/12646864
 export function shuffle(array, prng) {
   for (let i = array.length - 1; i >= 0; i--) {
-    const j = Math.floor(prng() * (i + 1));
+    const j = Math.floor(prng.f(1) * (i + 1));
     [array[i], array[j]] = [array[j], array[i]];
   }
 }
@@ -59,8 +59,19 @@ export const easeOutCirc = (x) => {
   return Math.sqrt(1 - Math.pow(x - 1, 2));
 };
 
+/**
+ * https://stackoverflow.com/a/47593316
+ * @typedef {Object} PRNG
+ * @property {function(number): number} n
+ * @property {function(number): number} n1
+ * @property {function(number): number} f
+ * @property {function(number, number): number} r
+ *
+ * @param {number} a
+ * @returns {PRNG}
+ */
 export function splitmix32(a) {
-  return function () {
+  function rnd() {
     a |= 0;
     a = (a + 0x9e3779b9) | 0;
     let t = a ^ (a >>> 16);
@@ -68,9 +79,11 @@ export function splitmix32(a) {
     t = t ^ (t >>> 15);
     t = Math.imul(t, 0x735a2d97);
     return ((t = t ^ (t >>> 15)) >>> 0) / 4294967296;
+  }
+  return {
+    n: (n) => Math.floor(rnd() * (n + 1)),
+    n1: (n) => Math.floor(rnd() * (n + 1) + 1),
+    f: (n) => rnd() * n,
+    r: (n, m) => Math.floor(rnd() * (m - n + 1)) + n,
   };
 }
-
-export const randN = (n, r) => Math.floor(r() * n);
-export const randN1 = (n, r) => Math.floor(r() * (n + 1));
-export const randF = (n, r) => r() * n;
