@@ -100,4 +100,26 @@ export const initShip = (rend, r) => {
     h: 0.5,
     d: 0.075,
   });
+  const shape = {
+    rx: 180,
+    w: 0.07,
+    d: 0.07,
+    h: 0.2,
+    z: -0.06,
+    y: -0.1,
+    b: "#ffff00",
+    o: 0.15,
+  };
+  rend.add("pyramid", {
+    g: "shipPivot",
+    id: "flame1",
+    ...shape,
+    x: 0.18,
+  });
+  rend.add("pyramid", {
+    g: "shipPivot",
+    id: "flame2",
+    ...shape,
+    x: -0.18,
+  });
 };

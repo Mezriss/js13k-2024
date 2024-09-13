@@ -111,6 +111,7 @@ function startLevel(levelN) {
       return;
     }
     animate(tweens, level, rend, dt);
+    animateExhaust(rend, t, state.boosts);
     rend.draw(dt);
     requestAnimationFrame(loop);
   };
@@ -166,6 +167,12 @@ function animate(tweens, level, rend, dt) {
         tween.from + tween.delta * easeOutCirc(tween.progress / tween.duration);
     }
   });
+}
+
+function animateExhaust(rend, t, s = 1) {
+  const nl = Math.sin(t / 150) * 0.015 + 0.02 * s;
+  rend.move({ id: "flame1", h: 0.15 + nl, y: -nl / 2 - 0.1 });
+  rend.move({ id: "flame2", h: 0.15 + nl, y: -nl / 2 - 0.1 });
 }
 
 //UI
@@ -235,8 +242,15 @@ function renderIntro() {
       }
     }
   }
-  rend.draw(1); //there is something wrong with light setup
-  rend.draw(1);
+  const loop = (t) => {
+    animateExhaust(rend, t);
+
+    rend.draw(1);
+    if (document.querySelector("#splash").classList.contains("active")) {
+      requestAnimationFrame(loop);
+    }
+  };
+  requestAnimationFrame(loop);
   //
   // const loop = (dt) => {
   //   rend.draw(dt);
