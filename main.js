@@ -34,7 +34,7 @@ function startLevel(levelN) {
   /**
    * @type {State}
    */
-  const state = { ...stateDefaults, r: playerR[difficulty] };
+  const state = { ...stateDefaults, r: playerR[difficulty - 1] };
   /**
    * @type {Entity[]}
    */
