@@ -5,12 +5,11 @@ import { patterns } from "./patterns.js";
 
 /**
  * @param {number} levelN
- * @param seed
  * @param {W2} rend
  * @param {PRNG} prng
  * @returns [Entity[], Tween[]]
  */
-export const generateLevel = (levelN, seed, rend, prng) => {
+export const generateLevel = (levelN, rend, prng) => {
   const objects = [];
   const tweens = [];
 
@@ -19,7 +18,7 @@ export const generateLevel = (levelN, seed, rend, prng) => {
   // timing for gates closing assumes that player gets and keeps X bonuses at equal interval
   // if X is reached player arrives at the end when last gate is 50% closed
 
-  const obstacleOffset = baseSpeed * 5;
+  const obstacleOffset = baseSpeed * 3;
   const totalLength = levelLength * (1 + 0.2 * (levelN - 1));
   const targetBoosts = levelN * 2;
 
@@ -32,10 +31,10 @@ export const generateLevel = (levelN, seed, rend, prng) => {
   initFloor(rend, totalLength);
   initExit(rend, totalLength);
 
-  objects.push(initBoost(rend, 0, baseSpeed * 4));
+  objects.push(initBoost(rend, 0, baseSpeed * 2));
 
-  for (let i = 1; i < (totalLength - obstacleOffset) / 20; i++) {
-    objects.push(initBoost(rend, prng.r(-13, 13), obstacleOffset + i * 20));
+  for (let i = 1; i < (totalLength - obstacleOffset) / 15; i++) {
+    objects.push(initBoost(rend, prng.r(-8, 8), obstacleOffset + i * 20));
   }
 
   // every Xm do a group
@@ -52,20 +51,22 @@ export const generateLevel = (levelN, seed, rend, prng) => {
     spikes.forEach(([x, y, w, h]) => objects.push(initSpike(rend, x, y, w, h)));
   };
 
-  for (let i = 0; i < (totalLength - obstacleOffset) / (20 - levelN); i++) {
-    const cy = obstacleOffset + (20 - levelN) * i;
-    switch (prng.n(2)) {
+  for (let i = 0; i < (totalLength - obstacleOffset) / (25 - levelN); i++) {
+    const cy = obstacleOffset + (25 - levelN) * i;
+    switch (i % 3) {
       case 0:
-        addGroup([prng.r(-5, 5), cy]);
+        addGroup([prng.r(-14, -5), cy]);
+        addGroup([prng.r(-5, 5), cy + 5]);
+        addGroup([prng.r(5, 14), cy]);
         break;
       case 1:
-        addGroup([prng.r(-14, -2), cy]);
-        addGroup([prng.r(2, 14), cy]);
+        addGroup([prng.r(-14, -5), cy]);
+        addGroup([prng.r(5, 14), cy]);
         break;
       case 2:
-        addGroup([prng.r(-14, -2), cy]);
+        addGroup([prng.r(-14, -5), cy]);
         addGroup([prng.r(-5, 5), cy - 5]);
-        addGroup([prng.r(2, 14), cy]);
+        addGroup([prng.r(5, 14), cy]);
         break;
     }
   }

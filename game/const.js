@@ -72,4 +72,11 @@ export const logo = [
   [2, 2, 2, , 2, , 2, , , 2, , , 2, 2, 2],
 ];
 
-export const seededRng = [splitmix32(1), splitmix32(1), splitmix32(1), splitmix32(1), Math.random];
+export const seededRng = [
+  () => splitmix32(2),
+  () => splitmix32(3),
+  () => splitmix32(3),
+  () => splitmix32(6),
+  () => splitmix32(0),
+  () => splitmix32((Math.random() * 2 ** 32) >>> 0),
+];

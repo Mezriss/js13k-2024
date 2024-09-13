@@ -21,7 +21,7 @@ import { play, tracks } from "./game/sound.js";
  */
 const canvas = document.querySelector("#c");
 
-function startLevel(levelN, seed = 1) {
+function startLevel(levelN) {
   canvas.width = window.innerWidth;
   canvas.height = window.innerHeight;
 
@@ -38,11 +38,47 @@ function startLevel(levelN, seed = 1) {
   /**
    * @type {Entity[]}
    */
-  const [level, tweens] = generateLevel(levelN, seed, rend, seededRng[seed]);
-  initShip(rend, state.r);
-  rend.move({ id: "camera", g: "ship" });
+  const [level, tweens] = generateLevel(levelN, rend, seededRng[levelN - 1]());
+  const levelEnd = levelLength * (1 + 0.2 * (levelN - 1));
+  let gameIntroTime = 8000;
+  let levelIntroTime = (levelEnd / 10) * 1000;
+  let last = 0;
 
-  go("hud");
+  const gameIntroLoop = (t) => {
+    last ||= t;
+    const dt = Math.min(t - last, 100);
+    last = t;
+    gameIntroTime -= dt;
+    if (gameIntroTime < 0) {
+      startLevelIntro();
+    } else {
+      requestAnimationFrame(gameIntroLoop);
+    }
+  };
+
+  const startLevelIntro = () => {
+    go("hud");
+    rend.move({ id: "camera", g: "ship", y: levelEnd - 1, z: 10 });
+    rend.draw(1);
+    rend.move({ id: "camera", y: rendererDefaults.camera.y, z: rendererDefaults.camera.z, a: levelIntroTime });
+
+    requestAnimationFrame(levelIntroLoop);
+  };
+
+  const levelIntroLoop = (t) => {
+    last ||= t;
+    const dt = Math.min(t - state.lastFrame, 100);
+    last = t;
+    levelIntroTime -= dt;
+    if (levelIntroTime < 0) {
+      requestAnimationFrame(loop);
+    } else {
+      rend.draw(dt);
+      requestAnimationFrame(levelIntroLoop);
+    }
+  };
+
+  initShip(rend, state.r);
 
   const loop = (t) => {
     state.lastFrame ||= t;
@@ -70,7 +106,7 @@ function startLevel(levelN, seed = 1) {
       defeat();
       return;
     }
-    if (state.y >= levelLength * (1 + 0.2 * (levelN - 1))) {
+    if (state.y >= levelEnd) {
       victory(levelN, state.score);
       return;
     }
@@ -78,7 +114,16 @@ function startLevel(levelN, seed = 1) {
     rend.draw(dt);
     requestAnimationFrame(loop);
   };
-  requestAnimationFrame(loop);
+
+  const data = load();
+  if (!data.seenIntro) {
+    data.seenIntro = true;
+    save(data);
+    go("intro");
+    requestAnimationFrame(gameIntroLoop);
+  } else {
+    startLevelIntro();
+  }
 }
 document.querySelector("#ls").addEventListener("click", (e) => {
   const l = e.target.dataset?.level;
@@ -126,6 +171,7 @@ function animate(tweens, level, rend, dt) {
 //UI
 window.go = function go(view) {
   const [from, to] = document.querySelectorAll(`.active,#${view}`);
+  canvas.style.opacity = view === "hud" ? "1" : "0";
   from.classList.toggle("active");
   to.classList.toggle("active");
   document.querySelectorAll("button").forEach((el) => el.blur());
@@ -135,10 +181,10 @@ function renderLevelSelector() {
   const ls = document.querySelector("#ls");
   const data = load();
   let out = "";
-  for (let i = 0; i < 5; i++) {
+  for (let i = 0; i < 6; i++) {
     out += `<div><button data-level="${i + 1}"${
       i > 0 && !data.score[i - 1] ? "disabled" : ""
-    }>${i + 1}</button>${data.score[i] || "Not Passed"}</div>`;
+    }>${i === 5 ? "?" : i + 1}</button>${data.score[i] || "Not Passed"}</div>`;
   }
 
   ls.innerHTML = out;

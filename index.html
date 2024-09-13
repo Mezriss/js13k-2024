@@ -27,6 +27,9 @@
         grid-template-areas: "l t r" ". c ." " . b ." ". h .";
         transition: 1s;
       }
+      canvas {
+        transition: 1s;
+      }
       #splash {
         background: transparent;
       }
@@ -36,6 +39,31 @@
       }
       #win {
         background: #999900;
+      }
+      #intro > div {
+        grid-area: c;
+        text-align: center;
+        font-size: 5vb;
+      }
+      #intro > div > div {
+        opacity: 0;
+        transition: opacity 1s ease-in-out;
+      }
+      #intro.active > div > div:nth-child(1) {
+        opacity: 1;
+        transition-delay: 0.5s;
+      }
+      #intro.active > div > div:nth-child(2) {
+        opacity: 1;
+        transition-delay: 2s;
+      }
+      #intro.active > div > div:nth-child(3) {
+        opacity: 1;
+        transition-delay: 5s;
+      }
+      #intro.active > div > div:nth-child(4) {
+        opacity: 1;
+        transition-delay: 6.5s;
       }
       #win > div {
         grid-area: c;
@@ -161,6 +189,15 @@
 
     <div id="splash" class="active">
       <button onclick="go('menu')">Start</button>
+    </div>
+    <div id="intro">
+      <div>
+        <div>When 13th gates closes &mdash;</div>
+        <div>all hope will be lost.</div>
+        <div>With enough speed</div>
+        <div>you will break through</div>
+        <br />
+      </div>
     </div>
     <div id="win">
       <div>

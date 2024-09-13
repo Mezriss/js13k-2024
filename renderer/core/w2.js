@@ -167,7 +167,7 @@ export default class W2 {
         this.gl.bufferData(34962 /* ARRAY_BUFFER */, new Float32Array(m.vertices), 35044 /*STATIC_DRAW*/);
 
         // Compute #smooth normals if they don't exist yet (optional)
-        if (!m.normals && this.#smooth) this.#smooth(state);
+        //if (!m.normals && this.#smooth) this.#smooth(state);
 
         // Make a buffer from the #smooth/custom normals (if any)
         if (m.normals) {
@@ -520,47 +520,47 @@ export default class W2 {
   // Smooth normals computation plug-in (optional)
   // =============================================
 
-  #smooth(state, dict = {}, vertices = [], iterate, iterateSwitch, i) {
-    const m = this.#models[state.type];
-    // Prepare #smooth normals array
-    m.normals = [];
-
-    // Fill vertices array: [[x,y,z],[x,y,z]...]
-    for (i = 0; i < m.vertices.length; i += 3) {
-      vertices.push(m.vertices.slice(i, i + 3));
-    }
-
-    // Iterator
-    if ((iterate = m.indices)) iterateSwitch = 1;
-    else (iterate = vertices), (iterateSwitch = 0);
-
-    // Iterate twice on the vertices
-    // - 1st pass: compute normals of each triangle and accumulate them for each vertex
-    // - 2nd pass: save the final #smooth normals values
-    for (let i = 0; i < iterate.length * 2; i += 3) {
-      let j, A, B, C, Ai, Bi, Ci, normal, AB, BC;
-      j = i % iterate.length;
-      A = vertices[(Ai = iterateSwitch ? m.indices[j] : j)];
-      B = vertices[(Bi = iterateSwitch ? m.indices[j + 1] : j + 1)];
-      C = vertices[(Ci = iterateSwitch ? m.indices[j + 2] : j + 2)];
-      AB = [B[0] - A[0], B[1] - A[1], B[2] - A[2]];
-      BC = [C[0] - B[0], C[1] - B[1], C[2] - B[2]];
-      normal =
-        i > j
-          ? [0, 0, 0]
-          : [AB[1] * BC[2] - AB[2] * BC[1], AB[2] * BC[0] - AB[0] * BC[2], AB[0] * BC[1] - AB[1] * BC[0]];
-      dict[A[0] + "_" + A[1] + "_" + A[2]] ||= [0, 0, 0];
-      dict[B[0] + "_" + B[1] + "_" + B[2]] ||= [0, 0, 0];
-      dict[C[0] + "_" + C[1] + "_" + C[2]] ||= [0, 0, 0];
-      m.normals[Ai] = dict[A[0] + "_" + A[1] + "_" + A[2]] = dict[A[0] + "_" + A[1] + "_" + A[2]].map(
-        (a, i) => a + normal[i],
-      );
-      m.normals[Bi] = dict[B[0] + "_" + B[1] + "_" + B[2]] = dict[B[0] + "_" + B[1] + "_" + B[2]].map(
-        (a, i) => a + normal[i],
-      );
-      m.normals[Ci] = dict[C[0] + "_" + C[1] + "_" + C[2]] = dict[C[0] + "_" + C[1] + "_" + C[2]].map(
-        (a, i) => a + normal[i],
-      );
-    }
-  }
+  // #smooth(state, dict = {}, vertices = [], iterate, iterateSwitch, i) {
+  //   const m = this.#models[state.type];
+  //   // Prepare #smooth normals array
+  //   m.normals = [];
+  //
+  //   // Fill vertices array: [[x,y,z],[x,y,z]...]
+  //   for (i = 0; i < m.vertices.length; i += 3) {
+  //     vertices.push(m.vertices.slice(i, i + 3));
+  //   }
+  //
+  //   // Iterator
+  //   if ((iterate = m.indices)) iterateSwitch = 1;
+  //   else (iterate = vertices), (iterateSwitch = 0);
+  //
+  //   // Iterate twice on the vertices
+  //   // - 1st pass: compute normals of each triangle and accumulate them for each vertex
+  //   // - 2nd pass: save the final #smooth normals values
+  //   for (let i = 0; i < iterate.length * 2; i += 3) {
+  //     let j, A, B, C, Ai, Bi, Ci, normal, AB, BC;
+  //     j = i % iterate.length;
+  //     A = vertices[(Ai = iterateSwitch ? m.indices[j] : j)];
+  //     B = vertices[(Bi = iterateSwitch ? m.indices[j + 1] : j + 1)];
+  //     C = vertices[(Ci = iterateSwitch ? m.indices[j + 2] : j + 2)];
+  //     AB = [B[0] - A[0], B[1] - A[1], B[2] - A[2]];
+  //     BC = [C[0] - B[0], C[1] - B[1], C[2] - B[2]];
+  //     normal =
+  //       i > j
+  //         ? [0, 0, 0]
+  //         : [AB[1] * BC[2] - AB[2] * BC[1], AB[2] * BC[0] - AB[0] * BC[2], AB[0] * BC[1] - AB[1] * BC[0]];
+  //     dict[A[0] + "_" + A[1] + "_" + A[2]] ||= [0, 0, 0];
+  //     dict[B[0] + "_" + B[1] + "_" + B[2]] ||= [0, 0, 0];
+  //     dict[C[0] + "_" + C[1] + "_" + C[2]] ||= [0, 0, 0];
+  //     m.normals[Ai] = dict[A[0] + "_" + A[1] + "_" + A[2]] = dict[A[0] + "_" + A[1] + "_" + A[2]].map(
+  //       (a, i) => a + normal[i],
+  //     );
+  //     m.normals[Bi] = dict[B[0] + "_" + B[1] + "_" + B[2]] = dict[B[0] + "_" + B[1] + "_" + B[2]].map(
+  //       (a, i) => a + normal[i],
+  //     );
+  //     m.normals[Ci] = dict[C[0] + "_" + C[1] + "_" + C[2]] = dict[C[0] + "_" + C[1] + "_" + C[2]].map(
+  //       (a, i) => a + normal[i],
+  //     );
+  //   }
+  // }
 }
